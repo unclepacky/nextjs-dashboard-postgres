@@ -11,6 +11,22 @@ const config: Config = {
       gridTemplateColumns: {
         '13': 'repeat(13, minmax(0, 1fr))',
       },
+      height: {
+        header: 'var(--header-height)',
+      },
+      zIndex: {
+        header: 'calc(var(--header-zindex) + 1)',
+      },
+      backgroundColor: {
+        header: '##fff',
+        // header: '#0a0a0a',
+      },
+      maxWidth: {
+        'custom-vw': '100vw',
+      },
+      scrollPadding: {
+        top: 'var(--header-height)',
+      },
       colors: {
         blue: {
           400: '#2589FE',
@@ -28,5 +44,6 @@ const config: Config = {
     },
   },
   plugins: [require('@tailwindcss/forms')],
+  darkMode: 'class',
 };
 export default config;
