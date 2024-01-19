@@ -73,22 +73,24 @@ export function Card({
       </div>
       {/* Check if value is an object and render accordingly */}
       <div className="flex h-28 flex-col  items-center justify-center overflow-hidden truncate  rounded-xl  bg-white dark:bg-[#0a0a0a] dark:text-white">
-        {type === 'invoices' && typeof value === 'object'
-          ? Object.entries(value).map(([key, val]) => (
-              <div
-                key={key}
-                className="flex justify-start text-left text-lg capitalize"
-              >
-                <p className=" text-lg capitalize">{`${key}: `}</p>
-                <p className=" text-lg capitalize">{`${val}`}</p>
-              </div>
-            ))
-          : /* Render value directly if it's not an object */
-            typeof value !== 'object' && (
-              <div className="text-2xl">
-                <p>{value}</p>
-              </div>
-            )}
+        <div>
+          {type === 'invoices' && typeof value === 'object'
+            ? Object.entries(value).map(([key, val]) => (
+                <div
+                  key={key}
+                  className="flex justify-start text-left text-lg capitalize"
+                >
+                  <p className=" text-lg capitalize">{`${key}: `}</p>
+                  <p className=" text-lg capitalize">{`${val}`}</p>
+                </div>
+              ))
+            : /* Render value directly if it's not an object */
+              typeof value !== 'object' && (
+                <div className="text-2xl">
+                  <p>{value}</p>
+                </div>
+              )}
+        </div>
       </div>
     </div>
   );

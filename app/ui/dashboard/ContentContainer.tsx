@@ -32,7 +32,7 @@ export default function ContentContainer({
               gridAutoRows: '1fr',
             }}
           >
-            <div className="col-start-2 col-end-3 flex flex-col items-stretch justify-start gap-6 p-0">
+            <div className="col-start-2 col-end-3 flex flex-col items-stretch justify-start gap-0 p-0">
               {children}
             </div>
           </section>

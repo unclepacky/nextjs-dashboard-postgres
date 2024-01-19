@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { IconType } from 'react-icons';
 
 interface CustomIconProps {
@@ -18,9 +18,3 @@ export default function CustomIcon({
 }: CustomIconProps) {
   return <Icon style={{ width, height, color, stroke }} />;
 }
-
-// return (
-//     <div>
-//       <CustomIcon icon={AiOutlineApartment} width="32px" height="32px" color="blue" stroke="red" />
-//     </div>
-//   );

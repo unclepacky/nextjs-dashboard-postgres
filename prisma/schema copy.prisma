@@ -47,7 +47,7 @@ model Building {
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id])
 
-  // unit Unit[]
+  unit Unit[]
 }
 
 model Property {
@@ -86,12 +86,11 @@ model Unit {
 
   rateHistory RateHistory[]
 
-  // currencyId String   @default("e69607d7-71d6-429d-b15e-d220201e7a20")
-  // currency   Currency @relation(fields: [currencyId], references: [id])
-  currency CurrencyEnum @default(USD)
+  currencyId String   @default("e69607d7-71d6-429d-b15e-d220201e7a20")
+  currency   Currency @relation(fields: [currencyId], references: [id])
 
-  // buildingId String   @default("77159616-0c50-4bd2-a708-2391b45debe5")
-  // building   Building @relation(fields: [buildingId], references: [id])
+  buildingId String   @default("77159616-0c50-4bd2-a708-2391b45debe5")
+  building   Building @relation(fields: [buildingId], references: [id])
 
   Contract Contract[]
 }
@@ -123,7 +122,7 @@ model Currency {
   code               String                   @unique
   createdAt          DateTime                 @default(now())
   conversionRateLogs CurrencyConversionRate[]
-  // unit               Unit[]
+  unit               Unit[]
   rateHistory        RateHistory[] // Reverse relation to PriceHistory
   Contract           Contract[]
 }

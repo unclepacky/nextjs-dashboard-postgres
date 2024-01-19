@@ -3,7 +3,11 @@ import MenuItem from './MenuItem';
 
 import { unitDropDownMenu } from '@/app/lib/menu';
 
-export default function Items() {
+interface ItemsProps {
+  type?: string;
+}
+
+export default function Items({ type }: ItemsProps) {
   return (
     <div
       // className=" absolute -bottom-5 left-5 z-[2001] overflow-hidden overscroll-contain rounded-md opacity-[1]"

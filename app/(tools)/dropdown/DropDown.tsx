@@ -1,10 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import MenuItem from './MenuItem';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import Items from './Items';
+import { IconType } from 'react-icons';
 
-export default function DropDown() {
+interface DropDownProps {
+  menuIcon: ReactElement; // TypeScript type annotation for the prop
+  type?: string;
+}
+
+export default function DropDown({ menuIcon }: DropDownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const itemRefs = useRef<HTMLDivElement>(null);
@@ -33,8 +38,9 @@ export default function DropDown() {
           transition: 'background .2s,color .2s',
         }}
       >
-        <span className="flex items-center justify-center gap-2 overflow-hidden overflow-ellipsis whitespace-nowrap px-[6px] py-0 ">
-          <svg
+        <span className="flex items-center justify-center ">
+          {menuIcon}
+          {/* <svg
             className="h-4 w-4 flex-shrink-0"
             fill="none"
             height="24"
@@ -54,7 +60,7 @@ export default function DropDown() {
             <circle cx="12" cy="12" r="1" fill="currentColor"></circle>
             <circle cx="19" cy="12" r="1" fill="currentColor"></circle>
             <circle cx="5" cy="12" r="1" fill="currentColor"></circle>
-          </svg>
+          </svg> */}
         </span>
       </button>
       {isOpen && (
