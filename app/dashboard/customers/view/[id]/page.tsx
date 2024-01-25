@@ -1,4 +1,4 @@
-import { editCustomer, viewCustomer } from '@/app/lib/actions';
+import { viewCustomer } from '@/app/lib/actions';
 import { countryList } from '@/app/lib/nationality';
 import CustomerInput from '@/app/ui/dashboard/customers/CustomerInput';
 import prisma from '@/prisma/client';
@@ -22,12 +22,12 @@ interface Props {
   params: { id: string };
 }
 
-export default async function CustomerEditPage({
+export default async function ViewCustomerPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const handleEditCustomer = editCustomer.bind(null, params.id);
+  const handleViewCustomer = viewCustomer.bind(null, params.id);
 
   const customer = await prisma.customers.findUnique({
     where: {
@@ -36,7 +36,7 @@ export default async function CustomerEditPage({
   });
 
   return (
-    <form action={handleEditCustomer}>
+    <form action={handleViewCustomer}>
       <div className=" flex flex-col rounded-md bg-gray-50 p-4 md:p-6">
         <div className="flex flex-wrap gap-6">
           <div className="flex-1/4 flex">
@@ -48,6 +48,9 @@ export default async function CustomerEditPage({
                   width={200}
                   height={200}
                   priority
+                  // layout="fill"
+                  // objectFit="cover"
+                  // className="pointer-events-none"
                   className="overflow-hidden"
                 />
               </div>
@@ -55,8 +58,7 @@ export default async function CustomerEditPage({
                 <CustomerInput
                   htmlFor=""
                   label=""
-                  disabled={false}
-                  required={false}
+                  disabled={true}
                   defaultValue={customer?.name || ''}
                   id="name"
                   name="name"
@@ -75,8 +77,7 @@ export default async function CustomerEditPage({
                   <CustomerInput
                     htmlFor="firstName"
                     label="First Name"
-                    disabled={false}
-                    required={true}
+                    disabled={true}
                     defaultValue={customer?.firstName || ''}
                     id="firstName"
                     name="firstName"
@@ -91,8 +92,7 @@ export default async function CustomerEditPage({
                   <CustomerInput
                     htmlFor="lastName"
                     label="Last Name"
-                    disabled={false}
-                    required={true}
+                    disabled={true}
                     defaultValue={customer?.lastName || ''}
                     id="lastName"
                     name="lastName"
@@ -106,8 +106,7 @@ export default async function CustomerEditPage({
                   <CustomerInput
                     htmlFor="phone"
                     label="Mobile"
-                    disabled={false}
-                    required={true}
+                    disabled={true}
                     defaultValue={customer?.phone || ''}
                     id="phone"
                     name="phone"
@@ -123,8 +122,7 @@ export default async function CustomerEditPage({
                   <CustomerInput
                     htmlFor="email"
                     label="Email"
-                    disabled={false}
-                    required={true}
+                    disabled={true}
                     defaultValue={customer?.email || ''}
                     id="email"
                     name="email"
@@ -145,7 +143,7 @@ export default async function CustomerEditPage({
                       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                       aria-describedby="customer-error"
                       defaultValue={customer?.nationality}
-                      disabled={false}
+                      disabled
                     >
                       <option value="" disabled>
                         Select a country
@@ -165,8 +163,7 @@ export default async function CustomerEditPage({
                   <CustomerInput
                     htmlFor="passport"
                     label="Passport number"
-                    disabled={false}
-                    required={false}
+                    disabled={true}
                     defaultValue={customer?.passport || ''}
                     id="passport"
                     name="passport"
@@ -182,8 +179,7 @@ export default async function CustomerEditPage({
                   <CustomerInput
                     htmlFor="occupation"
                     label="Occupation"
-                    disabled={false}
-                    required={false}
+                    disabled={true}
                     defaultValue={customer?.occupation || ''}
                     id="occupation"
                     name="occupation"
@@ -204,8 +200,7 @@ export default async function CustomerEditPage({
                       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                       aria-describedby="customer-error"
                       defaultValue={customer?.status}
-                      disabled={false}
-                      required
+                      disabled
                     >
                       <option value="" disabled>
                         Select a status
@@ -225,8 +220,7 @@ export default async function CustomerEditPage({
                   <CustomerInput
                     htmlFor="address"
                     label="Address"
-                    disabled={false}
-                    required={false}
+                    disabled={true}
                     defaultValue={customer?.address || ''}
                     id="address"
                     name="address"
@@ -245,7 +239,7 @@ export default async function CustomerEditPage({
                 <div className="flex flex-wrap justify-between gap-2">
                   <div className="flex items-center">
                     <input
-                      disabled={false}
+                      disabled
                       required
                       id="general"
                       name="type"
@@ -263,7 +257,7 @@ export default async function CustomerEditPage({
                   </div>
                   <div className="flex items-center">
                     <input
-                      disabled={false}
+                      disabled
                       required
                       id="student"
                       name="type"
@@ -281,7 +275,7 @@ export default async function CustomerEditPage({
                   </div>
                   <div className="flex items-center">
                     <input
-                      disabled={false}
+                      disabled
                       required
                       id="corporate"
                       name="type"
@@ -299,7 +293,7 @@ export default async function CustomerEditPage({
                   </div>
                   <div className="flex items-center">
                     <input
-                      disabled={false}
+                      disabled
                       required
                       id="vip"
                       name="type"

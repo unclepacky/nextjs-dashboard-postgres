@@ -1,39 +1,38 @@
 import Navigation from '@/app/(tools)/navigator/Navigation';
 import CustomersTable from '@/app/ui/dashboard/customers/CustomersTable';
 import FilterSelect from '@/app/ui/dashboard/customers/filters/FilterSelect';
+import UnitsTable from '@/app/ui/dashboard/units/UnitsTable';
 import Search from '@/app/ui/search';
 import prisma from '@/prisma/client';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { CustomerStatus, CustomerType } from '@prisma/client';
+import { UnitStatus, UnitType } from '@prisma/client';
 import Link from 'next/link';
 
 interface SearchParamsProps {
   searchParams: {
     page?: string;
     query?: string;
-    type: CustomerType;
-    status: CustomerStatus;
+    type: UnitType;
+    status: UnitStatus;
   };
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export default async function CustomersPage({
-  searchParams,
-}: SearchParamsProps) {
+export default async function UnitsPage({ searchParams }: SearchParamsProps) {
   const currentPage = Number(searchParams?.page) || 1;
 
-  const types = Object.values(CustomerType);
+  const types = Object.values(UnitType);
   const type = types.includes(searchParams.type)
     ? searchParams.type
     : undefined;
 
-  const statuses = Object.values(CustomerStatus);
+  const statuses = Object.values(UnitStatus);
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;
 
-  const totalNumbOfCustomers = await prisma.customers.count({
+  const totalNumbOfUnits = await prisma.unit.count({
     where: {
       name: {
         contains: searchParams.query,
@@ -43,15 +42,14 @@ export default async function CustomersPage({
       status: status,
     },
   });
-  const totalPages = Math.ceil(totalNumbOfCustomers / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalNumbOfUnits / ITEMS_PER_PAGE);
 
   return (
     <>
       <div className="mt-2 flex items-center justify-between gap-2 md:mt-4">
-        <Search placeholder="Search invoices..." />
-        {/* <TypeFilter type={type} /> */}
+        <Search placeholder="Search Units..." />
         <FilterSelect
-          options={Object.values(CustomerType).map((type) => ({
+          options={Object.values(UnitType).map((type) => ({
             value: type,
             label: type,
           }))}
@@ -60,7 +58,7 @@ export default async function CustomersPage({
           placeholder="Filter by Type"
         />
         <FilterSelect
-          options={Object.values(CustomerStatus).map((status) => ({
+          options={Object.values(UnitStatus).map((status) => ({
             value: status,
             label: status,
           }))}
@@ -68,12 +66,12 @@ export default async function CustomersPage({
           queryParamName="status"
           placeholder="Filter by status"
         />
-        <Link href="/dashboard/customers/create">
+        <Link href="/dashboard/units/create">
           <PlusIcon width={24} height={24} />
         </Link>
         {/* <CreateInvoice /> */}
       </div>
-      <CustomersTable
+      <UnitsTable
         itemsPerPage={ITEMS_PER_PAGE}
         currentPage={currentPage}
         query={searchParams?.query || ''}

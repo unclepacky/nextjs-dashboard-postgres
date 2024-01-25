@@ -35,14 +35,14 @@ export default function Menu() {
         </Link>
         <Link
           className="relative inline-block flex-shrink-0 px-3 py-4 text-sm font-normal"
-          href="/"
+          href="/dashboard/units"
         >
           <div
             className="absolute left-0 right-0 top-2 z-[-1] h-8 transform-none rounded-[4px] opacity-0"
             style={{ contain: 'strict', background: 'hsla( 0,0%,12% ,1)' }}
           ></div>
           {/* <div className="absolute bottom-0 left-2 right-2 block h-0 border-b-2 border-white"></div> */}
-          Activity
+          Units
         </Link>
         <Link
           className="relative inline-block flex-shrink-0 px-3 py-4 text-sm font-normal"
