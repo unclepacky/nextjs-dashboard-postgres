@@ -121,11 +121,30 @@ model Contract {
   customerId String
   customer   Customers @relation(fields: [customerId], references: [id])
 
-  currencyId String?
-  currency   Currency? @relation(fields: [currencyId], references: [id])
+  // currencyId String?
+  // currency   Currency? @relation(fields: [currencyId], references: [id])
+  currency CurrencyEnum @default(USD)
 
   transaction       Transaction[]
   contractExtension ContractExtension[]
+  Currency          Currency?           @relation(fields: [currencyId], references: [id])
+  currencyId        String?
+}
+
+model ContractExtension {
+  id            String   @id @default(uuid())
+  startDate     DateTime
+  endDate       DateTime
+  isDaily       Boolean  @default(false)
+  dailyAmount   Float    @default(0)
+  monthlyAmount Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  contractId String
+  contract   Contract @relation(fields: [contractId], references: [id])
+
+  transaction Transaction[]
 }
 
 model Transaction {
@@ -150,22 +169,6 @@ model Transaction {
   updateAt     DateTime    @updatedAt()
   chargeType   ChargeType? @relation(fields: [chargeTypeId], references: [id])
   chargeTypeId String?
-}
-
-model ContractExtension {
-  id            String   @id @default(uuid())
-  startDate     DateTime
-  endDate       DateTime
-  isDaily       Boolean  @default(false)
-  dailyAmount   Float    @default(0)
-  monthlyAmount Float    @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  contractId String
-  contract   Contract @relation(fields: [contractId], references: [id])
-
-  transaction Transaction[]
 }
 
 model Currency {
@@ -248,11 +251,11 @@ enum CustomerType {
 }
 
 enum ContractType {
-  INQUIRY
-  ACTIVE
+  INQUIRY //Applies to someone just inquiring about VGR not a contract
+  ACTIVE // When the inquiry becomes a contract then it is Active
   INACTIVE
-  RELEASED
-  RESERVED
+  RELEASED // when the client leaves the contract is released
+  RESERVATION
 }
 
 // Types of financial transactions associated with a contract.
@@ -263,6 +266,9 @@ enum TransactionType {
   MAINTENANCE_FEE // Maintenance or repair charges.
   PAYMENT // Payments made by the tenant.
   RENT
+  CREDIT
+  DEBIT
+  TRANSFER
 }
 
 enum CurrencyEnum {

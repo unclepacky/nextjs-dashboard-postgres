@@ -1,11 +1,11 @@
-import { deleteCustomer } from '@/app/lib/actions';
+import { deleteContract } from '@/app/lib/actions';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
 export default function DeleteButton({ id }: { id: string }) {
-  const handleDeleteCustomer = deleteCustomer.bind(null, id);
+  const handleDeleteContract = deleteContract.bind(null, id);
   return (
     <div className="relative">
-      <form action={handleDeleteCustomer}>
+      <form action={handleDeleteContract}>
         <button
           className="rounded-full border border-transparent p-2 hover:border-gray-400"
           title="Delete"

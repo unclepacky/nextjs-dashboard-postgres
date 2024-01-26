@@ -3,6 +3,7 @@
 import prisma from '@/prisma/client';
 import {
   Block,
+  ContractType,
   CurrencyEnum,
   CustomerStatus,
   CustomerType,
@@ -250,4 +251,52 @@ export async function deleteUnit(id: string) {
   });
 
   revalidatePath('/dashboard/units');
+}
+
+export async function deleteContract(id: string) {
+  const contract = await prisma.contract.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  revalidatePath('/dashboard/contracts');
+}
+
+export async function addContract(formData: FormData) {
+  console.log(formData);
+
+  const type = formData.get('type') as ContractType;
+  const unitId = formData.get('unitId') as string;
+  const customerId = formData.get('customerId') as string;
+  const currency = formData.get('currency') as CurrencyEnum;
+  const startDate = new Date(formData.get('startDate') as string);
+  const endDate = new Date(formData.get('endDate') as string);
+  const dailyRate = Number(formData.get('dailyRate'));
+  const monthlyRate = Number(formData.get('monthlyRate'));
+  const isDaily = formData.get('isDaily') === 'on';
+
+  // const firstName = formData.get('firstName') as string;
+  // const lastName = formData.get('lastName') as string;
+  // const phone = formData.get('phone') as string;
+  // const email = formData.get('email') as string;
+  // const nationality = formData.get('nationality') as string;
+  // const passport = formData.get('passport') as string;
+
+  const newCustomer = await prisma.contract.create({
+    data: {
+      currency: currency,
+      customerId: customerId,
+      unitId: unitId,
+      type: type,
+      dailyAmount: dailyRate,
+      monthlyAmount: monthlyRate,
+      startDate: startDate,
+      endDate: endDate,
+      isDaily: isDaily,
+      newMonthlyAmount: monthlyRate,
+    },
+  });
+  revalidatePath('/dashboard/contracts');
+  redirect('/dashboard/contracts');
 }

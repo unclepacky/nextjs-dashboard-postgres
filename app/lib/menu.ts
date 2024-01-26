@@ -3,6 +3,7 @@ import { CiEdit, CiBoxList } from 'react-icons/ci';
 import { MdOutlineAddHome, MdViewCompact } from 'react-icons/md';
 import { RiGalleryLine } from 'react-icons/ri';
 import { GrVmMaintenance } from 'react-icons/gr';
+import { Contract } from '@prisma/client';
 
 export interface UnitDropDownTypes {
   label: string;
@@ -17,4 +18,17 @@ export const unitDropDownMenu: UnitDropDownTypes[] = [
   { label: 'List', link: '/', icon: CiBoxList },
   { label: 'Gallery', link: '/', icon: RiGalleryLine },
   { label: 'Maintenance', link: '/', icon: GrVmMaintenance },
+];
+
+export const ContractColumns: { label: string; value: keyof Contract }[] = [
+  { label: 'Unit', value: 'unitId' },
+  { label: 'Client', value: 'customerId' },
+  { label: 'Start', value: 'startDate' },
+  { label: 'End', value: 'endDate' },
+  { label: 'Currency', value: 'currency' },
+  { label: 'Daily', value: 'dailyAmount' },
+  { label: 'Monthly', value: 'monthlyAmount' },
+  { label: 'New Monthly', value: 'newMonthlyAmount' },
+  { label: 'Type', value: 'type' },
+  { label: 'Daily?', value: 'isDaily' },
 ];
