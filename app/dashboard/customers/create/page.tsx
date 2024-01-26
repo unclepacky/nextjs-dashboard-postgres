@@ -233,7 +233,7 @@ export default async function CustomerAddPage() {
         >
           Cancel
         </Link>
-        <button type="submit">Create Invoice</button>
+        <button type="submit">Create Customer</button>
         {/* <Button type="submit">Create Invoice</Button> */}
       </div>
     </form>
