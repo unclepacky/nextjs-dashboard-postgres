@@ -155,11 +155,20 @@ export default async function ContractAddPage() {
                       <option value="" disabled>
                         Select a unit
                       </option>
-                      {units.map((unit) => (
-                        <option key={unit.id} value={unit.id}>
-                          {unit.name}
-                        </option>
-                      ))}
+                      {units.map((unit) => {
+                        const optionText = `${unit.name} ${' '.repeat(
+                          50 - unit.name.length,
+                        )} ${unit.dailyRate}$/${unit.monthlyRate}$`;
+                        return (
+                          <option
+                            key={unit.id}
+                            value={unit.id}
+                            style={{ fontFamily: 'monospace' }}
+                          >
+                            {optionText}
+                          </option>
+                        );
+                      })}
                     </select>
                     <FlagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
                   </div>
