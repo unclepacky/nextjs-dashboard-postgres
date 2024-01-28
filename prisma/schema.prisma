@@ -114,6 +114,7 @@ model Contract {
   newMonthlyAmount Float        @default(0)
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
+  currency         CurrencyEnum @default(USD)
 
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
@@ -123,7 +124,6 @@ model Contract {
 
   // currencyId String?
   // currency   Currency? @relation(fields: [currencyId], references: [id])
-  currency CurrencyEnum @default(USD)
 
   transaction       Transaction[]
   contractExtension ContractExtension[]
@@ -140,6 +140,8 @@ model ContractExtension {
   monthlyAmount Float    @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  currency CurrencyEnum @default(USD)
 
   contractId String
   contract   Contract @relation(fields: [contractId], references: [id])
@@ -165,10 +167,11 @@ model Transaction {
   extensionId String? // In case I want to link it to a certain extension / month
   extension   ContractExtension? @relation(fields: [extensionId], references: [id]) // The associated extension.
 
-  createdAt    DateTime    @default(now())
-  updateAt     DateTime    @updatedAt()
-  chargeType   ChargeType? @relation(fields: [chargeTypeId], references: [id])
-  chargeTypeId String?
+  // chargeTypeId String?
+  // chargeType   ChargeType? @relation(fields: [chargeTypeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
 }
 
 model Currency {
@@ -204,10 +207,10 @@ model RateHistory {
 
 // Model representing different types of charges that can be applied to contracts
 model ChargeType {
-  id           String        @id @default(uuid())
-  name         String // Name of the charge type (e.g., Cleaning, Electricity).
-  description  String? // Detailed description of the charge type.
-  transactions Transaction[] // Transactions that used this charge type.
+  id          String  @id @default(uuid())
+  name        String // Name of the charge type (e.g., Cleaning, Electricity).
+  description String? // Detailed description of the charge type.
+  // transactions Transaction[] // Transactions that used this charge type.
 }
 
 // **************************************************************

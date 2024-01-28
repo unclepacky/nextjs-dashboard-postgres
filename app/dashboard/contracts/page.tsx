@@ -31,20 +31,20 @@ export default async function ContractsPage({
 
   const totalNumbOfContracts = await prisma.contract.count({
     where: {
-      AND: [
-        {
-          unit: {
-            name: {
-              contains: searchParams.query,
-              mode: 'insensitive', // Optional: makes the search case-insensitive
-            },
-          },
-        },
+      OR: [
         {
           customer: {
             name: {
               contains: searchParams.query,
-              mode: 'insensitive', // Optional: makes the search case-insensitive
+              mode: 'insensitive', // Case-insensitive search
+            },
+          },
+        },
+        {
+          unit: {
+            name: {
+              contains: searchParams.query,
+              mode: 'insensitive', // Case-insensitive search
             },
           },
         },
@@ -59,8 +59,8 @@ export default async function ContractsPage({
     <>
       <div className="mt-2 flex items-center justify-between gap-2 md:mt-4">
         <Search placeholder="Search Contracts..." />
-        {/* <FilterSelect
-          options={Object.values(UnitType).map((type) => ({
+        <FilterSelect
+          options={Object.values(ContractType).map((type) => ({
             value: type,
             label: type,
           }))}
@@ -68,7 +68,7 @@ export default async function ContractsPage({
           queryParamName="type"
           placeholder="Filter by Type"
         />
-        <FilterSelect
+        {/* <FilterSelect
           options={Object.values(UnitStatus).map((status) => ({
             value: status,
             label: status,

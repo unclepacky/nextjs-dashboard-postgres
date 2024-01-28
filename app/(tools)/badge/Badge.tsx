@@ -12,6 +12,7 @@ interface BadgeProps {
   content: string;
   bordered?: BadgeType;
   large?: BadgeType;
+  className?: string;
 }
 
 export default function Badge({
@@ -20,6 +21,7 @@ export default function Badge({
   content,
   bordered,
   large,
+  className,
 }: BadgeProps) {
   const round = typeToRound[type];
   const color = categoryToColor[category];
@@ -27,7 +29,6 @@ export default function Badge({
   const largeFont = large
     ? (typeToRound[large] as FontType)
     : { size: '0.75rem', height: '1rem' };
-
   return (
     // <div className="flex flex-col gap-10">
     <div>
@@ -145,10 +146,13 @@ export default function Badge({
       </div> */}
       {/* <div>{largeFont}</div> */}
       <span
-        className={`me-2 border-[${border}] border-${color}-400 rounded-[${round}] bg-${color}-100 px-2.5 py-0.5  text-[${largeFont.size}] font-medium leading-[${largeFont.height}] text-${color}-800 dark:bg-${color}-900 dark:text-${color}-300`}
+        className={`me-2 border-[${border}] border-${color}-400 rounded-[${round}] bg-${color}-100 px-2.5 py-0.5  text-[${largeFont.size}] font-medium leading-[${largeFont.height}] text-${color}-800 dark:bg-${color}-900 dark:text-${color}-300 ${className}`}
       >
         {content}
       </span>
     </div>
   );
+}
+{
+  /* <FlagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" /> */
 }

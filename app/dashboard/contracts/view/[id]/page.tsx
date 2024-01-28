@@ -1,3 +1,5 @@
+import Badge from '@/app/(tools)/badge/Badge';
+import { BadgeCategory, BadgeType } from '@/app/(tools)/badge/defenition';
 import { editContract } from '@/app/lib/actions';
 import ContractInput from '@/app/ui/dashboard/contracts/ContractInput';
 import prisma from '@/prisma/client';
@@ -36,7 +38,7 @@ const statusColors = {
   },
 };
 
-export default async function ContractEditPage({
+export default async function ContractViewPage({
   params,
 }: {
   params: { id: string };
@@ -80,7 +82,7 @@ export default async function ContractEditPage({
                         return (
                           <div key={type} className="flex w-1/4 items-center">
                             <input
-                              disabled={false}
+                              disabled={true}
                               required
                               id={type}
                               name="type"
@@ -113,7 +115,7 @@ export default async function ContractEditPage({
                       name="unitId"
                       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                       aria-describedby="units-error"
-                      disabled={false}
+                      disabled={true}
                       defaultValue={contractWithId?.unitId}
                     >
                       <option value="" disabled>
@@ -150,7 +152,7 @@ export default async function ContractEditPage({
                       name="customerId"
                       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                       aria-describedby="customers-error"
-                      disabled={false}
+                      disabled={true}
                       defaultValue={contractWithId?.customerId}
                     >
                       <option value="" disabled>
@@ -172,7 +174,7 @@ export default async function ContractEditPage({
                   <ContractInput
                     htmlFor="startDate"
                     label="Start date"
-                    disabled={false}
+                    disabled={true}
                     required={true}
                     id="startDate"
                     name="startDate"
@@ -189,7 +191,7 @@ export default async function ContractEditPage({
                   <ContractInput
                     htmlFor="endDate"
                     label="End date"
-                    disabled={false}
+                    disabled={true}
                     required={true}
                     id="endDate"
                     name="endDate"
@@ -212,7 +214,7 @@ export default async function ContractEditPage({
                       name="currency"
                       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                       aria-describedby="currency-error"
-                      disabled={false}
+                      disabled={true}
                       defaultValue={contractWithId?.currency}
                       required
                     >
@@ -233,7 +235,7 @@ export default async function ContractEditPage({
                   <ContractInput
                     htmlFor="dailyRate"
                     label="Daily Rate"
-                    disabled={false}
+                    disabled={true}
                     required={true}
                     id="dailyRate"
                     name="dailyRate"
@@ -249,7 +251,7 @@ export default async function ContractEditPage({
                   <ContractInput
                     htmlFor="monthlyRate"
                     label="Monthly Rate"
-                    disabled={false}
+                    disabled={true}
                     required={true}
                     id="monthlyRate"
                     name="monthlyRate"
@@ -265,13 +267,13 @@ export default async function ContractEditPage({
                   <ContractInput
                     htmlFor="isDaily"
                     label="Is Daily"
-                    disabled={false}
                     required={false}
                     id="isDaily"
                     name="isDaily"
                     type="checkbox"
                     placeholder=""
                     defaultChecked={contractWithId?.isDaily}
+                    disabled={true}
                   />
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import React, { ReactElement } from 'react';
 
-interface ContractInputProps {
+interface ExtensionInputProps {
   disabled: boolean;
   required: boolean;
   id: string;
@@ -16,7 +16,7 @@ interface ContractInputProps {
   defaultChecked?: boolean;
 }
 
-export default function ContractInput(props: ContractInputProps) {
+export default function ExtensionInput(props: ExtensionInputProps) {
   const isCheckbox = props.type === 'checkbox';
 
   return (

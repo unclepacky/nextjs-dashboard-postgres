@@ -37,6 +37,18 @@ interface UnitUpdateData {
   block?: Block;
   currency?: CurrencyEnum;
 }
+interface ContractUpdateData {
+  type?: ContractType;
+  startDate?: Date;
+  endDate?: Date;
+  isDaily?: boolean;
+  dailyAmount?: number;
+  monthlyAmount?: number;
+  newMonthlyAmount?: number;
+  currency?: CurrencyEnum;
+  unitId?: string;
+  customerId?: string;
+}
 
 export async function addCustomer(formData: FormData) {
   const firstName = formData.get('firstName') as string;
@@ -299,4 +311,182 @@ export async function addContract(formData: FormData) {
   });
   revalidatePath('/dashboard/contracts');
   redirect('/dashboard/contracts');
+}
+
+export async function editContract(id: string, formData: FormData) {
+  const type = formData.get('type') as ContractType;
+  const unitId = formData.get('unitId') as string;
+  const customerId = formData.get('customerId') as string;
+  const currency = formData.get('currency') as CurrencyEnum;
+  const monthlyAmount = Number(formData.get('monthlyRate'));
+  const dailyAmount = Number(formData.get('dailyRate'));
+  const startDate = new Date(formData.get('startDate') as string);
+  const endDate = new Date(formData.get('endDate') as string);
+  const isDaily = Boolean(formData.get('isDaily'));
+
+  const existingContract = await prisma.contract.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  const updateData: ContractUpdateData = {};
+
+  // Compare each field and prepare the update object
+
+  const formatDateString = (date: Date | string): string => {
+    return new Date(date).toISOString().split('T')[0];
+  };
+
+  const formattedStartDate = formatDateString(startDate);
+  const formattedExistingStartDate = formatDateString(
+    existingContract?.startDate ?? new Date(),
+  );
+
+  const formattedEndDate = formatDateString(endDate);
+  const formattedExistingEndDate = formatDateString(
+    existingContract?.endDate ?? new Date(),
+  );
+
+  if (formattedStartDate !== formattedExistingStartDate) {
+    console.log(startDate, ' vs ', existingContract?.startDate);
+    updateData.startDate = startDate;
+  }
+
+  if (formattedEndDate !== formattedExistingEndDate) {
+    updateData.endDate = endDate;
+  }
+
+  if (isDaily !== existingContract?.isDaily) {
+    updateData.isDaily = isDaily;
+  }
+  if (monthlyAmount !== existingContract?.monthlyAmount) {
+    updateData.monthlyAmount = monthlyAmount;
+    updateData.newMonthlyAmount = monthlyAmount;
+  }
+
+  if (unitId !== existingContract?.unitId) {
+    updateData.unitId = unitId;
+  }
+
+  if (customerId !== existingContract?.customerId) {
+    updateData.customerId = customerId;
+  }
+
+  if (dailyAmount !== existingContract?.dailyAmount) {
+    updateData.dailyAmount = dailyAmount;
+  }
+
+  if (type !== existingContract?.type) {
+    updateData.type = type;
+  }
+
+  if (currency !== existingContract?.currency) {
+    updateData.currency = currency;
+  }
+
+  // Perform the update if there are changes
+  if (Object.keys(updateData).length > 0) {
+    console.log('LENGHT > 0', { updateData });
+    await prisma.contract.update({
+      where: { id },
+      data: updateData,
+    });
+  } else {
+    console.log({ updateData });
+  }
+
+  revalidatePath(`/dashboard/contracts/edit/${id}`);
+  redirect(`/dashboard/contracts`);
+}
+
+export async function addExtensionToContract(id: string, formData: FormData) {
+  console.log('The contract Id is : ', id);
+  console.log(formData);
+
+  const startDate = new Date(formData.get('startDate') as string);
+  const endDate = new Date(formData.get('endDate') as string);
+  const currency = formData.get('currency') as CurrencyEnum;
+  const dailyAmount = Number(formData.get('dailyRate'));
+  const monthlyAmount = Number(formData.get('monthlyRate'));
+  const isDaily = Boolean(formData.get('isDaily'));
+
+  // Using $transaction to create a ContractExtension and update Contract
+  // const result = await prisma.$transaction([
+  //   prisma.contractExtension.create({
+  //     data: {
+  //       contractId: id,
+  //       startDate: startDate,
+  //       endDate: endDate,
+  //       currency: currency,
+  //       dailyAmount: dailyAmount,
+  //       monthlyAmount: monthlyAmount,
+  //       isDaily: isDaily,
+  //     },
+  //   }),
+  //   prisma.contract.update({
+  //     where: {
+  //       id: id,
+  //     },
+  //     data: {
+  //       type: 'ACTIVE',
+  //       newMonthlyAmount: monthlyAmount,
+  //     },
+  //   }),
+  // ]);
+
+  // Start the first transaction to create contractExtension
+  const newExtension = await prisma.contractExtension.create({
+    data: {
+      contractId: id,
+      startDate: startDate,
+      endDate: endDate,
+      currency: currency,
+      dailyAmount: dailyAmount,
+      monthlyAmount: monthlyAmount,
+      isDaily: isDaily,
+    },
+  });
+
+  // Use the ID of the newExtension in the second transaction
+  const result = await prisma.$transaction([
+    prisma.transaction.create({
+      data: {
+        contractId: id,
+        amount: monthlyAmount,
+        type: 'RENT',
+        fromDate: startDate,
+        toDate: endDate,
+        extensionId: newExtension.id,
+      },
+    }),
+    prisma.contract.update({
+      where: {
+        id: id,
+      },
+      data: {
+        type: 'ACTIVE',
+        newMonthlyAmount: monthlyAmount,
+      },
+    }),
+  ]);
+
+  // 'result' now contains the results of the transaction and update operations
+
+  revalidatePath(`/dashboard/extensions/${id}`);
+  redirect(`/dashboard/contracts`);
+}
+
+export async function deleteExtension(id: string) {
+  const extension = await prisma.contractExtension.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  revalidatePath('/dashboard/contracts');
+}
+
+export async function updateExtension(id: string, formData: FormData) {
+  console.log(formData);
 }
