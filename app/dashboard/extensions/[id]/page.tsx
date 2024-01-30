@@ -105,12 +105,17 @@ export default async function ContractExtensionPage({
                         htmlFor="unit"
                         label="Unit"
                         disabled={true}
-                        required={false}
+                        required={true}
                         id="unit"
                         name="unit"
                         type="text"
                         placeholder=""
-                        defaultValue={contract?.unit.name}
+                        defaultValue={
+                          contract?.unit.status === 'OCCUPIED'
+                            ? undefined
+                            : contract?.unit.name
+                        }
+                        // defaultValue={contract?.unit.name}
                         icon={<UserCircleIcon />}
                       />
                     </div>

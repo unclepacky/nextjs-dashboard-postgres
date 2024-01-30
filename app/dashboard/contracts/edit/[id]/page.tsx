@@ -43,7 +43,11 @@ export default async function ContractEditPage({
 }) {
   const handleEditContract = editContract.bind(null, params.id);
 
-  const units = await prisma.unit.findMany();
+  const units = await prisma.unit.findMany({
+    where: {
+      status: 'VACANT',
+    },
+  });
   const customers = await prisma.customers.findMany();
 
   const contractWithId = await prisma.contract.findUnique({
@@ -114,7 +118,11 @@ export default async function ContractEditPage({
                       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                       aria-describedby="units-error"
                       disabled={false}
-                      defaultValue={contractWithId?.unitId}
+                      defaultValue={
+                        contractWithId?.unit.status === 'OCCUPIED'
+                          ? ''
+                          : contractWithId?.unitId
+                      }
                     >
                       <option value="" disabled>
                         Select a unit

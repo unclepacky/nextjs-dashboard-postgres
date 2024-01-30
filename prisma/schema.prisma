@@ -144,7 +144,7 @@ model ContractExtension {
   currency CurrencyEnum @default(USD)
 
   contractId String
-  contract   Contract @relation(fields: [contractId], references: [id])
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
 
   transaction Transaction[]
 }
@@ -162,7 +162,7 @@ model Transaction {
   // time     DateTime? @db.Time()
 
   contractId String // ID of the associated contract.
-  contract   Contract @relation(fields: [contractId], references: [id]) // The associated contract.
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade) // The associated contract.
 
   extensionId String? // In case I want to link it to a certain extension / month
   extension   ContractExtension? @relation(fields: [extensionId], references: [id]) // The associated extension.

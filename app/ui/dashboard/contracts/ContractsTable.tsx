@@ -1,21 +1,13 @@
 import prisma from '@/prisma/client';
-import {
-  CalendarIcon,
-  EllipsisHorizontalIcon,
-  EyeIcon,
-  FunnelIcon,
-  PencilIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
-import Image from 'next/image';
-import { ContractType, CustomerStatus, CustomerType } from '@prisma/client';
-import DropDown from '@/app/(tools)/dropdown/DropDown';
+import { EyeIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { ContractType } from '@prisma/client';
 import Link from 'next/link';
 import DeleteButton from '../customers/delete-button';
 import { ContractColumns } from '@/app/lib/menu';
 import { LuCable } from 'react-icons/lu';
 import React from 'react';
 import DeleteExtensionButton from '../extensions/delete-button';
+import ReleaseContract from './release-contract';
 
 export default async function ContractsTable({
   type,
@@ -28,7 +20,9 @@ export default async function ContractsTable({
   itemsPerPage: number;
   currentPage: number;
 }) {
-  //   const invoices = await fetchFilteredInvoices(query, currentPage);
+  const nonReleasedTypes = Object.values(ContractType).filter(
+    (t) => t !== 'RELEASED',
+  );
 
   const contracts = await prisma.contract.findMany({
     where: {
@@ -50,7 +44,7 @@ export default async function ContractsTable({
           },
         },
       ],
-      type: type,
+      type: type ? { equals: type } : { in: nonReleasedTypes },
     },
     include: {
       unit: true,
@@ -98,7 +92,14 @@ export default async function ContractsTable({
                 <React.Fragment key={contract.id}>
                   <tr className="group relative w-full cursor-pointer border-b py-3 text-sm last-of-type:border-none hover:bg-slate-100 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                      <div className="flex items-center gap-3">
+                      <div
+                        className={`flex items-center gap-3 ${
+                          contract.unit.status === 'OCCUPIED' &&
+                          contract.type !== 'ACTIVE'
+                            ? 'bg-red-300'
+                            : ''
+                        }`}
+                      >
                         <p>{contract.unit.name}</p>
                       </div>
                     </td>
@@ -133,6 +134,7 @@ export default async function ContractsTable({
                     <td className=" absolute right-0 hidden whitespace-nowrap rounded-2xl bg-white px-3 py-3 shadow-xl group-hover:flex group-hover:bg-slate-200">
                       <div className="flex items-center justify-center gap-2">
                         <DeleteButton id={contract.id} />
+                        <ReleaseContract id={contract.id} />
                         <Link
                           href={`/dashboard/contracts/edit/${contract.id}`}
                           className="rounded-full border border-transparent p-2 hover:border-gray-400"
@@ -198,12 +200,12 @@ export default async function ContractsTable({
                           >
                             <EyeIcon width={18} height={18} />
                           </Link>
-                          <Link
+                          {/* <Link
                             href={`/dashboard/extensions/${contract.id}`}
                             className="rounded-full border border-transparent p-2 hover:border-gray-400"
                           >
                             <LuCable width={18} height={18} />
-                          </Link>
+                          </Link> */}
                           {/* <ViewButton id={customer.id} /> */}
                         </div>
                       </td>
