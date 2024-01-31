@@ -8,7 +8,7 @@ export default function ReleaseContract({ id }: { id: string }) {
       <form action={handleReleaseContract}>
         <button
           className="rounded-full border border-transparent p-2 hover:border-gray-400"
-          title="Delete"
+          title="Release"
         >
           <ScissorsIcon width={18} height={18} />
         </button>

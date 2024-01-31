@@ -579,7 +579,17 @@ export async function updateExtension(id: string, formData: FormData) {
   }
   if (monthlyAmount !== existingExtension?.monthlyAmount) {
     updateData.monthlyAmount = monthlyAmount;
+
+    await prisma.contract.update({
+      where: {
+        id: existingExtension?.contractId,
+      },
+      data: {
+        newMonthlyAmount: monthlyAmount,
+      },
+    });
   }
+
   if (isDaily !== existingExtension?.isDaily) {
     updateData.isDaily = isDaily;
   }
@@ -593,4 +603,10 @@ export async function updateExtension(id: string, formData: FormData) {
   } else {
     console.log({ updateData });
   }
+  revalidatePath(`/dashboard/extensions/${id}`);
+  redirect(`/dashboard/contracts`);
+}
+
+export async function addTransaction(id: string, formData: FormData) {
+  console.log(formData);
 }

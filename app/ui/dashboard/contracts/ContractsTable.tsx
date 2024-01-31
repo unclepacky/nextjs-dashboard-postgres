@@ -8,6 +8,7 @@ import { LuCable } from 'react-icons/lu';
 import React from 'react';
 import DeleteExtensionButton from '../extensions/delete-button';
 import ReleaseContract from './release-contract';
+import { GrTransaction } from 'react-icons/gr';
 
 export default async function ContractsTable({
   type,
@@ -200,6 +201,13 @@ export default async function ContractsTable({
                           >
                             <EyeIcon width={18} height={18} />
                           </Link>
+                          <Link
+                            href={`/dashboard/transactions/create/${ext.id}`}
+                            className="rounded-full border border-transparent p-2 hover:border-gray-400"
+                          >
+                            <GrTransaction width={18} height={18} />
+                          </Link>
+
                           {/* <Link
                             href={`/dashboard/extensions/${contract.id}`}
                             className="rounded-full border border-transparent p-2 hover:border-gray-400"

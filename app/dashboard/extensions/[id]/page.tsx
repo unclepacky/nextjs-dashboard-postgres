@@ -6,6 +6,7 @@ import {
   BanknotesIcon,
   CalendarDaysIcon,
   CheckCircleIcon,
+  FlagIcon,
   UserCircleIcon,
   WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
@@ -31,7 +32,11 @@ export default async function ContractExtensionPage({
       unit: true,
     },
   });
-
+  const units = await prisma.unit.findMany({
+    // where: {
+    //   OR: [{ status: 'OCCUPIED' }, { id: contract?.unitId }],
+    // },
+  });
   if (contract) {
     // latestContractExtension = await isFirstExt(contract?.id);
     // console.log("isFristExtension", latestContractExtension);
@@ -76,7 +81,7 @@ export default async function ContractExtensionPage({
             </div>
           </div>
           <div className="flex flex-1 flex-col">
-            {/* Type */}
+            {/* Contract Info */}
             <fieldset className="mb-4">
               <legend className="mb-2 block text-sm font-medium">
                 Contract Info
@@ -100,7 +105,7 @@ export default async function ContractExtensionPage({
                       />
                     </div>
                     {/* Tenant Unit */}
-                    <div className="relative mb-4">
+                    {/* <div className="relative mb-4">
                       <ExtensionInput
                         htmlFor="unit"
                         label="Unit"
@@ -112,12 +117,49 @@ export default async function ContractExtensionPage({
                         placeholder=""
                         defaultValue={
                           contract?.unit.status === 'OCCUPIED'
-                            ? undefined
+                            ? 'undefined'
                             : contract?.unit.name
                         }
                         // defaultValue={contract?.unit.name}
                         icon={<UserCircleIcon />}
                       />
+                    </div> */}
+                    {/* Units */}
+                    <div className="mb-4">
+                      <label className="mb-2 block text-sm font-medium">
+                        Units
+                      </label>
+                      <div className="relative">
+                        <select
+                          required
+                          id="unitId"
+                          name="unitId"
+                          className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                          aria-describedby="units-error"
+                          disabled={true}
+                          // defaultValue=""
+                          defaultValue={contract?.unit.id}
+                        >
+                          <option value="" disabled>
+                            Select a unit
+                          </option>
+                          {units.map((unit) => {
+                            const optionText = `${unit.name} ${' '.repeat(
+                              50 - unit.name.length,
+                            )} ${unit.dailyRate}$/${unit.monthlyRate}$`;
+                            return (
+                              <option
+                                key={unit.id}
+                                value={unit.id}
+                                style={{ fontFamily: 'monospace' }}
+                              >
+                                {optionText}
+                              </option>
+                            );
+                          })}
+                        </select>
+                        <FlagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                      </div>
                     </div>
                     {/* Start Date */}
                     <div className="relative mb-4">
