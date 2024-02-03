@@ -2,7 +2,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline';
 import React, { ReactElement } from 'react';
 
 interface ExtensionInputProps {
-  disabled: boolean;
+  disabled?: boolean;
   required: boolean;
   id: string;
   name: string;
@@ -14,6 +14,7 @@ interface ExtensionInputProps {
   step?: string;
   defaultValue?: string;
   defaultChecked?: boolean;
+  readOnly?: boolean;
 }
 
 export default function ExtensionInput(props: ExtensionInputProps) {
@@ -27,6 +28,7 @@ export default function ExtensionInput(props: ExtensionInputProps) {
       {/* <div className={`relative ${isCheckbox ? 'flex items-center' : ''}`}> */}
       <div className={`relative`}>
         <input
+          readOnly
           defaultChecked={props.defaultChecked}
           disabled={props.disabled}
           defaultValue={props.defaultValue}

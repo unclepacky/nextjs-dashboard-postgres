@@ -8,11 +8,11 @@ export default function Header() {
   return (
     <header className="">
       <Link href="/">
-        <span className="z-header fixed left-6 top-5 hidden text-xl md:inline-flex">
+        <span className="fixed left-6 top-5 z-header hidden text-xl md:inline-flex">
           <BuildingOffice2Icon width={25} height={25} className="" />
         </span>
       </Link>
-      <nav className="h-header relative m-auto flex select-none items-center px-4 py-0 md:px-6">
+      <nav className="relative m-auto flex h-header select-none items-center px-4 py-0 md:px-6">
         <div className="z-10 flex min-w-0 flex-1 items-center pr-6">
           <ol className="m-0 flex max-w-full items-center p-0">
             <li className="hidden h-5 w-6 min-w-0 flex-shrink-0 flex-grow-0 text-sm md:flex"></li>
@@ -79,11 +79,11 @@ export default function Header() {
               style={{ transition: 'none 0s ease 0s' }}
             >
               <Link
-                href="\"
+                href="\dashboard\employee"
                 className=" text-button-txtlight cursor-pointer rounded-full px-3 py-2 text-sm outline-none "
                 style={{ transition: 'color.2s ease' }}
               >
-                Changelog
+                Employees
               </Link>
               <Link
                 href="\"

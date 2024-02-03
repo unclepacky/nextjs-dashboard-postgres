@@ -151,7 +151,6 @@ model ContractExtension {
 
 model Transaction {
   id     String          @id @default(uuid())
-  date   DateTime        @default(now()) // Date of the transaction.
   type   TransactionType // Type of the transaction (rent, payment, etc.).
   amount Float           @default(0) // Amount of the transaction.
 
@@ -211,6 +210,19 @@ model ChargeType {
   name        String // Name of the charge type (e.g., Cleaning, Electricity).
   description String? // Detailed description of the charge type.
   // transactions Transaction[] // Transactions that used this charge type.
+}
+
+model Employee {
+  id          String     @id @default(uuid())
+  name        String     @unique // Full Employee name
+  startDate   DateTime
+  email       String?
+  phone       String?
+  passport    String?
+  nationality String?
+  department  Department
+  createdAt   DateTime   @default(now())
+  updateAt    DateTime   @updatedAt()
 }
 
 // **************************************************************
@@ -278,4 +290,10 @@ enum CurrencyEnum {
   USD
   LBP
   EUR
+}
+
+enum Department {
+  RECEPTION
+  MAINTENANCE
+  CLEANING
 }

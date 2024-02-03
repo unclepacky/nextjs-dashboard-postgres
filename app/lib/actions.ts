@@ -7,6 +7,7 @@ import {
   CurrencyEnum,
   CustomerStatus,
   CustomerType,
+  Department,
   UnitStatus,
   UnitType,
 } from '@prisma/client';
@@ -609,4 +610,30 @@ export async function updateExtension(id: string, formData: FormData) {
 
 export async function addTransaction(id: string, formData: FormData) {
   console.log(formData);
+}
+
+export async function addEmployee(formData: FormData) {
+  console.log(formData);
+  const name = formData.get('name') as string;
+  const phone = formData.get('phone') as string;
+  const email = formData.get('email') as string;
+  const nationality = formData.get('nationality') as string;
+  const passport = formData.get('passport') as string;
+  const department = formData.get('department') as Department;
+  const startDate = new Date(formData.get('startDate') as string);
+
+  const newEmployee = await prisma.employee.create({
+    data: {
+      name,
+      phone,
+      email,
+      nationality,
+      passport,
+      department,
+      startDate,
+    },
+  });
+
+  revalidatePath('/dashboard/employee/create');
+  redirect('/dashboard/employee');
 }
