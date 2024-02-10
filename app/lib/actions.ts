@@ -8,12 +8,14 @@ import {
   CustomerStatus,
   CustomerType,
   Department,
+  TransactionType,
   UnitStatus,
   UnitType,
 } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { FormateDatesToCompare } from './dates';
+import { getContractIdFromExtension } from './utilFunctions';
 
 // **********************************************************************
 // CUSTOMER
@@ -609,7 +611,27 @@ export async function updateExtension(id: string, formData: FormData) {
 }
 
 export async function addTransaction(id: string, formData: FormData) {
-  console.log(formData);
+  const data = Object.fromEntries(formData);
+  console.log(data);
+  const contractId = await getContractIdFromExtension(id);
+  const transactionType = data.type as TransactionType;
+  const transactionAmount = Number(data.total);
+
+  // Assuming all other form data entries can be safely converted to strings
+  const details = Object.fromEntries(
+    Object.entries(data)
+      .filter(([key]) => key !== 'type' && key !== 'total')
+      .map(([key, value]) => [key, value.toString()]),
+  );
+  const newTransaction = await prisma.transaction.create({
+    data: {
+      type: transactionType,
+      amount: transactionAmount,
+      contractId: contractId,
+      extensionId: id,
+      transactionDetails: details,
+    },
+  });
 }
 
 export async function addEmployee(formData: FormData) {
@@ -636,4 +658,30 @@ export async function addEmployee(formData: FormData) {
 
   revalidatePath('/dashboard/employee/create');
   redirect('/dashboard/employee');
+}
+
+export async function curencyRate(
+  currencyCode: CurrencyEnum,
+): Promise<number | null> {
+  // Find the currency by its code
+  const currency = await prisma.currency.findUnique({
+    where: {
+      code: currencyCode,
+    },
+    include: {
+      conversionRateLogs: {
+        orderBy: {
+          recordedAt: 'desc',
+        },
+        take: 1, // Get the most recent record
+      },
+    },
+  });
+
+  // Check if currency and conversionRateLogs are found
+  if (currency && currency.conversionRateLogs.length > 0) {
+    return currency.conversionRateLogs[0].rate; // Return the most recent conversion rate
+  } else {
+    return null; // Return null if no currency or conversion rate is found
+  }
 }

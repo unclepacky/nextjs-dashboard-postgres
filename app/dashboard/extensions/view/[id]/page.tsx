@@ -20,7 +20,7 @@ export default async function ViewExtensionPage({
 }: {
   params: { id: string };
 }) {
-  console.log(params.id);
+  // console.log(params.id);
 
   // Get the Contract to which we are adding the extension
   // const contract = await prisma.contract.findUnique({

@@ -1,17 +1,61 @@
 import { addTransaction } from '@/app/lib/actions';
 import ExtensionInput from '@/app/ui/dashboard/extensions/ExtensionInput';
 import Transaction from '@/app/ui/dashboard/transactions/Transaction';
-import Cleaning from '@/app/ui/dashboard/transactions/cleaning/Cleaning';
+import Cleaning from '@/app/ui/dashboard/transactions/Cleaning';
 import prisma from '@/prisma/client';
 import {
   BanknotesIcon,
+  BuildingOffice2Icon,
+  CalendarDaysIcon,
+  CheckCircleIcon,
   FlagIcon,
   UserCircleIcon,
+  WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
-import { CurrencyEnum, TransactionType } from '@prisma/client';
+import { Block, CurrencyEnum, TransactionType, UnitType } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { TbBed } from 'react-icons/tb';
+
+const statusColors = {
+  CLEANING: {
+    color: 'bg-green-300',
+    Icon: CheckCircleIcon, // Note the capital 'I' in Icon, indicating a component
+  },
+  INTERNET: {
+    color: 'bg-blue-300',
+    Icon: TbBed,
+  },
+  ELECTRICITY: {
+    color: 'bg-red-300',
+    Icon: WrenchScrewdriverIcon,
+  },
+  MAINTENANCE: {
+    color: 'bg-orange-300',
+    Icon: CalendarDaysIcon,
+  },
+  RENT: {
+    color: 'bg-orange-300',
+    Icon: CalendarDaysIcon,
+  },
+  PAYMENT: {
+    color: 'bg-orange-300',
+    Icon: CalendarDaysIcon,
+  },
+  CREDIT: {
+    color: 'bg-orange-300',
+    Icon: CalendarDaysIcon,
+  },
+  DEBIT: {
+    color: 'bg-orange-300',
+    Icon: CalendarDaysIcon,
+  },
+  TRANSFER: {
+    color: 'bg-orange-300',
+    Icon: CalendarDaysIcon,
+  },
+};
 
 export default async function CreateTransactionWithExtId({
   params,
@@ -47,6 +91,8 @@ export default async function CreateTransactionWithExtId({
       status: 'OCCUPIED',
     },
   });
+
+  const employees = await prisma.employee.findMany();
 
   const handleAddTransaction = addTransaction.bind(null, params.id);
 
@@ -109,7 +155,7 @@ export default async function CreateTransactionWithExtId({
                             Select a unit
                           </option>
                           {units.map((unit) => {
-                            console.log('UNIT ID IS: ', unit.id);
+                            // console.log('UNIT ID IS: ', unit.id);
                             return (
                               <option
                                 key={unit.id}
@@ -240,89 +286,10 @@ export default async function CreateTransactionWithExtId({
               </div>
             </fieldset>
             <div className="flex gap-4">
-              <div className="flex flex-1 flex-col justify-start">
-                {/* ACCORDION */}
-                <div className="m-2 space-y-2">
-                  {firstHalfTransactionTypes.map((trans) => (
-                    <div
-                      key={trans}
-                      className="group flex flex-col gap-2 rounded-lg bg-black p-5 text-white"
-                      tabIndex={1}
-                    >
-                      <div className="flex cursor-pointer items-center justify-between">
-                        <span> {trans} </span>
-                        <Image
-                          width={20}
-                          height={20}
-                          alt="chevron"
-                          src="https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png"
-                          className="h-2 w-3 transition-all duration-500 group-focus:-rotate-180"
-                        />
-                      </div>
-                      <div className="invisible h-auto max-h-0 items-center opacity-0 transition-all group-focus:visible group-focus:max-h-screen group-focus:opacity-100 group-focus:duration-1000">
-                        <Transaction />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-1 flex-col justify-start">
-                {/* ACCORDION */}
-                <div className="m-2 space-y-2">
-                  {secondHalfTransactionTypes.map((trans) => (
-                    <div
-                      key={trans}
-                      className="group flex flex-col gap-2 rounded-lg bg-black p-5 text-white"
-                      tabIndex={1}
-                    >
-                      <div className="flex cursor-pointer items-center justify-between">
-                        <span> {trans} </span>
-                        <Image
-                          width={20}
-                          height={20}
-                          alt="chevron"
-                          src="https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png"
-                          className="h-2 w-3 transition-all duration-500 group-focus:-rotate-180"
-                        />
-                      </div>
-                      <div className="invisible h-auto max-h-0 items-center opacity-0 transition-all group-focus:visible group-focus:max-h-screen group-focus:opacity-100 group-focus:duration-1000">
-                        {/* Currency */}
-                        <div className="mb-4">
-                          <label className="mb-2 block text-sm font-medium">
-                            Choose a currency
-                          </label>
-                          <div className="relative">
-                            <select
-                              id="currency"
-                              name="currency"
-                              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                              aria-describedby="currency-error"
-                              disabled={false}
-                              defaultValue={extension?.currency}
-                              required
-                            >
-                              <option value="" disabled>
-                                Select a currency
-                              </option>
-                              {Object.values(CurrencyEnum).map((cur) => (
-                                <option key={cur} value={cur}>
-                                  {cur}
-                                </option>
-                              ))}
-                            </select>
-                            <BanknotesIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <Transaction employees={employees} />
             </div>
           </div>
         </div>
-        {/* ACCORDION */}
-
         {/* Button */}
         <div className="mt-6 flex justify-end gap-4">
           <Link

@@ -10,36 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model users {
-//   id       String @id @default(uuid())
-//   name     String
-//   email    String @unique
-//   password String
-// }
-
-// model customers {
-//   id        String @id @default(uuid())
-//   name      String
-//   email     String
-//   image_url String
-// }
-
-// model invoices {
-//   id          String   @id @default(uuid())
-//   customer_id String
-//   amount      Int
-//   status      String
-//   date        DateTime
-// }
-
-// model revenue {
-//   month   String @unique
-//   revenue Int
-// }
-
-// **************************************************************
-// START NEW SCHEMA
-// **************************************************************
 model Building {
   id   String @id @default(uuid())
   name String @unique
@@ -47,7 +17,7 @@ model Building {
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id])
 
-  unit Unit[]
+  // unit Unit[]
 }
 
 model Property {
@@ -58,16 +28,17 @@ model Property {
 
 model Customers {
   id          String         @id @default(uuid())
-  name        String //@unique // Full name of the customer.
-  firstName   String?
-  lastName    String?
+  name        String         @unique // Full name of the customer.
+  firstName   String
+  lastName    String
+  type        CustomerType   @default(GENERAL)
   status      CustomerStatus @default(POTENTIAL_TENANT)
   phone       String?
   email       String?        @default("cla@cl.com")
-  type        CustomerType   @default(GENERAL)
   occupation  String?
   address     String?
-  nationality String         @default("Lebaneese")
+  nationality String         @default("Lebanon")
+  passport    String?
   image_url   String         @default("/customers/profile.png")
   contract    Contract[]
 
@@ -86,35 +57,121 @@ model Unit {
 
   rateHistory RateHistory[]
 
-  currencyId String   @default("e69607d7-71d6-429d-b15e-d220201e7a20")
-  currency   Currency @relation(fields: [currencyId], references: [id])
+  // currencyId String   @default("e69607d7-71d6-429d-b15e-d220201e7a20")
+  // currency   Currency @relation(fields: [currencyId], references: [id])
+  currency CurrencyEnum @default(USD)
 
-  buildingId String   @default("77159616-0c50-4bd2-a708-2391b45debe5")
-  building   Building @relation(fields: [buildingId], references: [id])
+  // buildingId String   @default("77159616-0c50-4bd2-a708-2391b45debe5")
+  // building   Building @relation(fields: [buildingId], references: [id])
 
-  Contract Contract[]
+  contract Contract[]
 }
 
-model Contract {
-  id        String       @id @default(uuid())
-  type      ContractType @default(ACTIVE)
-  startDate DateTime     @default(now())
-  endDate   DateTime
-  deposit   Float        @default(0)
-  amount    Float        @default(0)
+// model Contract {
+//   id        String       @id @default(uuid())
+//   type      ContractType @default(ACTIVE)
+//   startDate DateTime     @default(now())
+//   endDate   DateTime
+//   deposit   Float        @default(0)
+//   amount    Float        @default(0)
 
-  currencyId String
-  currency   Currency @relation(fields: [currencyId], references: [id])
+//   currencyId String
+//   currency   Currency @relation(fields: [currencyId], references: [id])
+
+//   unitId String
+//   unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+//   customerId String?
+//   customer   Customers? @relation(fields: [customerId], references: [id])
+
+//   createdAt   DateTime      @default(now())
+//   // updatedAt DateTime @updatedAt
+//   Transaction Transaction[]
+// }
+// model Transaction {
+//   id          String   @id @default(uuid())
+//   date        DateTime @default(now()) // Date of the transaction.
+//   amount      Float // Amount of the transaction.
+//   description String? // Additional details about the transaction.
+
+//   type TransactionType // Type of the transaction (rent, payment, etc.).
+
+//   contractId String // ID of the associated contract.
+//   contract   Contract @relation(fields: [contractId], references: [id]) // The associated contract.
+
+//   chargeTypeId String? // ID of the associated charge type (if applicable).
+//   chargeType   ChargeType? @relation(fields: [chargeTypeId], references: [id]) // The associated charge type.
+// }
+
+model Contract {
+  id               String       @id @default(uuid())
+  type             ContractType @default(INACTIVE)
+  startDate        DateTime     @default(now())
+  endDate          DateTime     @default(now())
+  isDaily          Boolean      @default(false)
+  dailyAmount      Float        @default(0)
+  monthlyAmount    Float        @default(0)
+  newMonthlyAmount Float        @default(0)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  currency         CurrencyEnum @default(USD)
 
   unitId String
   unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
 
-  customerId String?
-  customer   Customers? @relation(fields: [customerId], references: [id])
+  customerId String
+  customer   Customers @relation(fields: [customerId], references: [id])
 
-  createdAt   DateTime      @default(now())
-  // updatedAt DateTime @updatedAt
-  Transaction Transaction[]
+  // currencyId String?
+  // currency   Currency? @relation(fields: [currencyId], references: [id])
+
+  transaction       Transaction[]
+  contractExtension ContractExtension[]
+  Currency          Currency?           @relation(fields: [currencyId], references: [id])
+  currencyId        String?
+}
+
+model ContractExtension {
+  id            String   @id @default(uuid())
+  startDate     DateTime
+  endDate       DateTime
+  isDaily       Boolean  @default(false)
+  dailyAmount   Float    @default(0)
+  monthlyAmount Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  currency CurrencyEnum @default(USD)
+
+  contractId String
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  transaction Transaction[]
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  type        TransactionType // Type of the transaction (rent, payment, etc.).
+  amount      Float           @default(0) // Amount of the transaction.
+  currentDate DateTime        @default(now())
+
+  fromDate DateTime?
+  toDate   DateTime?
+  fromTime DateTime?
+  tillTime DateTime?
+  // time     DateTime? @db.Time()
+
+  contractId String // ID of the associated contract.
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade) // The associated contract.
+
+  extensionId String? // In case I want to link it to a certain extension / month
+  extension   ContractExtension? @relation(fields: [extensionId], references: [id]) // The associated extension.
+
+  // chargeTypeId String?
+  // chargeType   ChargeType? @relation(fields: [chargeTypeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt()
 }
 
 model Currency {
@@ -122,9 +179,9 @@ model Currency {
   code               String                   @unique
   createdAt          DateTime                 @default(now())
   conversionRateLogs CurrencyConversionRate[]
-  unit               Unit[]
+  // unit               Unit[]
   rateHistory        RateHistory[] // Reverse relation to PriceHistory
-  Contract           Contract[]
+  contract           Contract[]
 }
 
 model CurrencyConversionRate {
@@ -148,27 +205,25 @@ model RateHistory {
   currency   Currency @relation(fields: [currencyId], references: [id])
 }
 
-model Transaction {
-  id          String   @id @default(uuid())
-  date        DateTime @default(now()) // Date of the transaction.
-  amount      Float // Amount of the transaction.
-  description String? // Additional details about the transaction.
-
-  type TransactionType // Type of the transaction (rent, payment, etc.).
-
-  contractId String // ID of the associated contract.
-  contract   Contract @relation(fields: [contractId], references: [id]) // The associated contract.
-
-  chargeTypeId String? // ID of the associated charge type (if applicable).
-  chargeType   ChargeType? @relation(fields: [chargeTypeId], references: [id]) // The associated charge type.
-}
-
 // Model representing different types of charges that can be applied to contracts
 model ChargeType {
-  id           String        @id @default(uuid())
-  name         String // Name of the charge type (e.g., Cleaning, Electricity).
-  description  String? // Detailed description of the charge type.
-  transactions Transaction[] // Transactions that used this charge type.
+  id          String  @id @default(uuid())
+  name        String // Name of the charge type (e.g., Cleaning, Electricity).
+  description String? // Detailed description of the charge type.
+  // transactions Transaction[] // Transactions that used this charge type.
+}
+
+model Employee {
+  id          String     @id @default(uuid())
+  name        String     @unique // Full Employee name
+  startDate   DateTime
+  email       String?
+  phone       String?
+  passport    String?
+  nationality String?
+  department  Department
+  createdAt   DateTime   @default(now())
+  updateAt    DateTime   @updatedAt()
 }
 
 // **************************************************************
@@ -212,24 +267,34 @@ enum CustomerType {
 }
 
 enum ContractType {
-  INQUIRY
-  ACTIVE
+  INQUIRY //Applies to someone just inquiring about VGR not a contract
+  ACTIVE // When the inquiry becomes a contract then it is Active
   INACTIVE
-  RELEASED
-  RESERVED
+  RELEASED // when the client leaves the contract is released
+  RESERVATION
 }
 
 // Types of financial transactions associated with a contract.
 enum TransactionType {
-  RENT // Monthly rent charge.
   CLEANING // Charges for cleaning services.
   ELECTRICITY // Charges for electricity usage.
-  MAINTENANCE_FEE // Maintenance or repair charges.
+  INTERNET
+  MAINTENANCE // Maintenance or repair charges.
   PAYMENT // Payments made by the tenant.
+  RENT
+  CREDIT
+  DEBIT
+  TRANSFER
 }
 
 enum CurrencyEnum {
   USD
   LBP
   EUR
+}
+
+enum Department {
+  RECEPTION
+  MAINTENANCE
+  CLEANING
 }

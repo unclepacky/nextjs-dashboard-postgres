@@ -150,9 +150,11 @@ model ContractExtension {
 }
 
 model Transaction {
-  id     String          @id @default(uuid())
-  type   TransactionType // Type of the transaction (rent, payment, etc.).
-  amount Float           @default(0) // Amount of the transaction.
+  id                 String          @id @default(uuid())
+  type               TransactionType // Type of the transaction (rent, payment, etc.).
+  amount             Float           @default(0) // Amount of the transaction.
+  currentDate        DateTime        @default(now())
+  transactionDetails Json?
 
   fromDate DateTime?
   toDate   DateTime?
@@ -278,7 +280,7 @@ enum TransactionType {
   CLEANING // Charges for cleaning services.
   ELECTRICITY // Charges for electricity usage.
   INTERNET
-  MAINTENANCE_FEE // Maintenance or repair charges.
+  MAINTENANCE // Maintenance or repair charges.
   PAYMENT // Payments made by the tenant.
   RENT
   CREDIT

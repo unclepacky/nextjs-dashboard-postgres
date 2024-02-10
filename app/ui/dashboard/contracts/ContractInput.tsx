@@ -24,7 +24,6 @@ export default function ContractInput(props: ContractInputProps) {
       <label htmlFor={props.htmlFor} className="mb-2 block text-sm font-medium">
         {props.label}
       </label>
-      {/* <div className={`relative ${isCheckbox ? 'flex items-center' : ''}`}> */}
       <div className={`relative`}>
         <input
           defaultChecked={props.defaultChecked}
