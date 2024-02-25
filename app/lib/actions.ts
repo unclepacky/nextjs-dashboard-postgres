@@ -30,6 +30,7 @@ interface CustomerUpdateData {
   nationality?: string;
   passport?: string;
   address?: string;
+  occupation?: string;
   status?: CustomerStatus;
 }
 interface UnitUpdateData {
@@ -118,6 +119,7 @@ export async function editCustomer(id: string, formData: FormData) {
   const nationality = formData.get('nationality') as string;
   let passport = formData.get('passport') as string | null;
   let address = formData.get('address') as string | null;
+  let occupation = formData.get('occupation') as string | null;
   const status = formData.get('status') as CustomerStatus;
 
   const existingCustomer = await prisma.customers.findUnique({
@@ -136,7 +138,9 @@ export async function editCustomer(id: string, formData: FormData) {
   if (!address) {
     address = null;
   }
-  console.log('ADDRESS: ', existingCustomer?.passport);
+  if (!occupation) {
+    occupation = null;
+  }
   const updateData: CustomerUpdateData = {};
 
   // Compare each field and prepare the update object
@@ -167,6 +171,9 @@ export async function editCustomer(id: string, formData: FormData) {
   if (address !== existingCustomer?.address) {
     updateData.address = formData.get('address') as string;
   }
+  if (occupation !== existingCustomer?.occupation) {
+    updateData.occupation = formData.get('occupation') as string;
+  }
   if (status !== existingCustomer?.status) {
     updateData.status = formData.get('status') as CustomerStatus;
   }
@@ -182,8 +189,8 @@ export async function editCustomer(id: string, formData: FormData) {
     console.log({ updateData });
   }
 
-  revalidatePath(`/dashboard/customers/edit/${id}`);
-  redirect(`/dashboard/customers/edit/${id}`);
+  revalidatePath(`/dashboard/customers`);
+  redirect(`/dashboard/customers`);
 }
 
 export async function addUnit(formData: FormData) {
@@ -265,7 +272,7 @@ export async function editUnit(id: string, formData: FormData) {
   }
 
   revalidatePath(`/dashboard/units/edit/${id}`);
-  redirect(`/dashboard/units/edit/${id}`);
+  redirect(`/dashboard/units`);
 }
 
 export async function deleteUnit(id: string) {
@@ -612,10 +619,11 @@ export async function updateExtension(id: string, formData: FormData) {
 
 export async function addTransaction(id: string, formData: FormData) {
   const data = Object.fromEntries(formData);
-  console.log(data);
+  console.log('DATA: ', data);
   const contractId = await getContractIdFromExtension(id);
   const transactionType = data.type as TransactionType;
   const transactionAmount = Number(data.total);
+  // const currentDate = d
 
   // Assuming all other form data entries can be safely converted to strings
   const details = Object.fromEntries(
@@ -626,12 +634,21 @@ export async function addTransaction(id: string, formData: FormData) {
   const newTransaction = await prisma.transaction.create({
     data: {
       type: transactionType,
-      amount: transactionAmount,
+      amount:
+        transactionType === 'PAYMENT' ? -transactionAmount : transactionAmount,
       contractId: contractId,
       extensionId: id,
+      // currentDate : ,
       transactionDetails: details,
     },
   });
+  console.log('NEW TRANSACTION', newTransaction);
+  revalidatePath('/dashboard/employee/create');
+  redirect('/dashboard/contracts');
+}
+
+export async function addTransactionV2(formData: FormData) {
+  console.log(formData);
 }
 
 export async function addEmployee(formData: FormData) {
@@ -684,4 +701,8 @@ export async function curencyRate(
   } else {
     return null; // Return null if no currency or conversion rate is found
   }
+}
+
+export async function customerStatement(formData: FormData) {
+  console.log(formData);
 }

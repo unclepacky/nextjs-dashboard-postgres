@@ -1,5 +1,4 @@
 import Navigation from '@/app/(tools)/navigator/Navigation';
-import CustomersTable from '@/app/ui/dashboard/customers/CustomersTable';
 import FilterSelect from '@/app/ui/dashboard/customers/filters/FilterSelect';
 import UnitsTable from '@/app/ui/dashboard/units/UnitsTable';
 import Search from '@/app/ui/search';
@@ -42,6 +41,7 @@ export default async function UnitsPage({ searchParams }: SearchParamsProps) {
       status: status,
     },
   });
+
   const totalPages = Math.ceil(totalNumbOfUnits / ITEMS_PER_PAGE);
 
   return (

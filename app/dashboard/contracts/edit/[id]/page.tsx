@@ -289,7 +289,7 @@ export default async function ContractEditPage({
           >
             Cancel
           </Link>
-          <button type="submit">Create</button>
+          <button type="submit">Update</button>
           {/* <Button type="submit">Create Invoice</Button> */}
         </div>
       </div>

@@ -2,36 +2,16 @@ import React from 'react';
 import CardOverview from '../ui/dashboard/dashboard-cards/CardOverview';
 import { AiOutlineApartment as UnitIcon } from 'react-icons/ai';
 import CardSummary from '../ui/dashboard/dashboard-cards/CardSummary';
+import CardStatement from '../ui/dashboard/dashboard-cards/CardStatement';
+import prisma from '@/prisma/client';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const customers = await prisma.customers.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+  });
   return (
-    // <div className="text-sm" style={{ minHeight: 'calc( 100vh - 85px )' }}>
-    //   <main
-    //     className="relative grid w-full text-sm"
-    //     style={{
-    //       gridTemplateColumns: `minmax(24px, 1fr) minmax(0, 1200px) minmax(24px, 1fr)`,
-    //       gridTemplateRows: 'auto',
-    //       gridAutoRows: '1fr',
-    //       minHeight: 'calc( 100vh - 85px )',
-    //     }}
-    //   >
-    //     <section
-    //       className="relative col-start-1 col-end-[-1] grid w-full  "
-    //       style={{
-    //         gridTemplateColumns: `minmax(24px, 1fr) minmax(0, 1200px) minmax(24px, 1fr)`,
-    //         gridTemplateRows: 'auto',
-    //         gridAutoRows: '1fr',
-    //       }}
-    //     >
-    //       <section
-    //         className="relative col-start-1 col-end-[-1] grid w-full px-0 py-6 "
-    //         style={{
-    //           gridTemplateColumns: `minmax(24px, 1fr) minmax(0, 1200px) minmax(24px, 1fr)`,
-    //           gridTemplateRows: 'auto',
-    //           gridAutoRows: '1fr',
-    //         }}
-    //       >
-    //         <div className="col-start-2 col-end-3 flex flex-col items-stretch justify-start gap-6 p-0">
     <>
       <form action="">
         <div className="flex  flex-row items-center justify-start gap-3 p-0">
@@ -367,6 +347,7 @@ export default function DashboardPage() {
         <div className=" flex flex-initial flex-col items-stretch justify-start gap-8">
           <section className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-x-6 gap-y-6">
             <CardOverview icon={UnitIcon} />
+            <CardStatement customers={customers} />
           </section>
           <section className="grid gap-6 sm:grid-cols-3 lg:grid-cols-4">
             <CardSummary />
@@ -374,10 +355,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </>
-    //         </div>
-    //       </section>
-    //     </section>
-    //   </main>
-    // </div>
   );
 }

@@ -47,24 +47,25 @@ model Customers {
 }
 
 model Unit {
-  id          String       @id @unique @default(uuid())
-  name        String       @unique
-  type        UnitType     @default(STUDIO)
-  status      UnitStatus   @default(VACANT)
-  building    Building     @default(VGI)
-  block       Block        @default(A)
-  monthlyRate Float        @default(600) // Most recent default price in USD
-  dailyRate   Float        @default(400) // Most recent default daily rate in USD
-  currency    CurrencyEnum @default(USD)
+  id          String     @id @unique @default(uuid())
+  name        String     @unique
+  type        UnitType   @default(STUDIO)
+  status      UnitStatus @default(VACANT)
+  building    Buildings  @default(VGI)
+  block       Block      @default(A)
+  monthlyRate Float      @default(600) // Most recent default price in USD
+  dailyRate   Float      @default(400) // Most recent default daily rate in USD
 
   rateHistory RateHistory[]
-  contract    Contract[]
 
   // currencyId String   @default("e69607d7-71d6-429d-b15e-d220201e7a20")
   // currency   Currency @relation(fields: [currencyId], references: [id])
+  currency CurrencyEnum @default(USD)
 
   // buildingId String   @default("77159616-0c50-4bd2-a708-2391b45debe5")
   // building   Building @relation(fields: [buildingId], references: [id])
+
+  contract Contract[]
 }
 
 model Contract {
@@ -211,7 +212,7 @@ enum UnitType {
   RESTAURANT
 }
 
-enum Building {
+enum Buildings {
   VGI
   VGII
 }

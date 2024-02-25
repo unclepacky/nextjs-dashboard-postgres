@@ -28,7 +28,7 @@ export default function ExtensionInput(props: ExtensionInputProps) {
       {/* <div className={`relative ${isCheckbox ? 'flex items-center' : ''}`}> */}
       <div className={`relative`}>
         <input
-          readOnly
+          readOnly={props.readOnly || false}
           defaultChecked={props.defaultChecked}
           disabled={props.disabled}
           defaultValue={props.defaultValue}

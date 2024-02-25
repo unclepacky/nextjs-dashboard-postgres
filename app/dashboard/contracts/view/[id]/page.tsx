@@ -119,7 +119,7 @@ export default async function ContractViewPage({
                       name="unitId"
                       className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                       aria-describedby="units-error"
-                      disabled={false}
+                      disabled={true}
                       defaultValue={contractWithId?.unitId}
                     >
                       <option value="" disabled>
@@ -291,11 +291,11 @@ export default async function ContractViewPage({
             href="/dashboard/contracts"
             className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
           >
-            Cancel
+            Close
           </Link>
-          <button type="submit" disabled>
+          {/* <button type="submit" disabled>
             Create
-          </button>
+          </button> */}
           {/* <Button type="submit">Create Invoice</Button> */}
         </div>
       </div>

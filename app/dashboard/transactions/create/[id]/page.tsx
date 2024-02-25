@@ -76,16 +76,7 @@ export default async function CreateTransactionWithExtId({
       },
     },
   });
-  // Get the Contract to which we are adding the extension
-  //   const contract = await prisma.contract.findUnique({
-  //     where: {
-  //       id: params.id,
-  //     },
-  //     include: {
-  //       customer: true,
-  //       unit: true,
-  //     },
-  //   });
+
   const units = await prisma.unit.findMany({
     where: {
       status: 'OCCUPIED',

@@ -62,6 +62,9 @@ export default async function ContractAddPage() {
     where: {
       status: 'VACANT',
     },
+    orderBy: {
+      name: 'asc',
+    },
   });
   const customers = await prisma.customers.findMany({
     orderBy: {

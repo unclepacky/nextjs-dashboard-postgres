@@ -13,7 +13,7 @@ export default async function page() {
       >
         <div className="flex cursor-pointer items-center justify-between"></div>
         <div className="invisible h-auto max-h-0 items-center opacity-0 transition-all group-focus:visible group-focus:max-h-screen group-focus:opacity-100 group-focus:duration-1000">
-          <Transaction />
+          <Transaction employees={employees} />
         </div>
       </div>
     </div>

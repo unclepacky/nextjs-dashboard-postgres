@@ -262,9 +262,9 @@ export default async function UnitViewPage({
             href="/dashboard/units"
             className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
           >
-            Cancel
+            Close
           </Link>
-          <button type="submit">Update</button>
+          {/* <button type="submit">Update</button> */}
           {/* <Button type="submit">Create Invoice</Button> */}
         </div>
       </div>

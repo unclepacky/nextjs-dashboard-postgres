@@ -1,18 +1,21 @@
-import { Revenue } from './../app/lib/definitions';
 import {
+  Block,
+  Building,
+  CurrencyEnum,
   CustomerStatus,
   CustomerType,
-  Prisma,
   PrismaClient,
+  UnitStatus,
+  UnitType,
 } from '@prisma/client';
-import {
-  invoices,
-  // customers,
-  revenue,
-  users,
-} from '../app/lib/placeholder-data';
+// import {
+//   invoices,
+//   // customers,
+//   revenue,
+//   users,
+// } from '../app/lib/placeholder-data';
 
-import { customers } from './../app/lib/vgrdata';
+import { customers, units } from './../app/lib/vgrdata';
 
 interface UserProps {
   id: string;
@@ -28,8 +31,8 @@ interface UserProps {
 // }
 interface CustomerProps {
   name: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   status: CustomerStatus;
   phone?: string;
   email?: string;
@@ -50,6 +53,18 @@ interface RevenueProps {
   revenue: number;
 }
 
+interface UnitProps {
+  name: string;
+  type: UnitType;
+  status: UnitStatus;
+  building: Building;
+  block: Block;
+  monthlyRate: number;
+  dailyRate: number;
+  currency: CurrencyEnum;
+}
+[];
+
 const prisma = new PrismaClient();
 
 // async function seedUsers(user: UserProps) {
@@ -62,18 +77,32 @@ const prisma = new PrismaClient();
 //     },
 //   });
 // }
-async function seedCustomers(customer: CustomerProps) {
-  const newCustomer = await prisma.customers.create({
-    data: {
-      name: customer.name,
-      firstName: customer.firstName,
-      lastName: customer.lastName,
-      status: customer.status,
-      type: customer.type,
-      email: customer.email,
-    },
-  });
-}
+// async function seedUnits(unit: UnitProps) {
+//   const newUnit = await prisma.unit.create({
+//     data: {
+//       name: unit.name,
+//       type: unit.type,
+//       status: unit.status,
+//       building: unit.building,
+//       block: unit.block,
+//       currency: unit.currency,
+//       monthlyRate: unit.monthlyRate,
+//       dailyRate: unit.dailyRate,
+//     },
+//   });
+// }
+// async function seedCustomers(customer: CustomerProps) {
+//   const newCustomer = await prisma.customers.create({
+//     data: {
+//       name: customer.name,
+//       firstName: customer.firstName,
+//       lastName: customer.lastName,
+//       status: customer.status,
+//       type: customer.type,
+//       email: customer.email,
+//     },
+//   });
+// }
 // async function seedInvoices(invoice: InvoiceProps) {
 //   const newInvoice = await prisma.invoices.create({
 //     data: {
@@ -99,6 +128,9 @@ async function main() {
   // await prisma.customers.deleteMany();
   // await prisma.invoices.deleteMany();
   // await prisma.revenue.deleteMany();
+  // for (const u of units) {
+  //   await seedUnits(u);
+  // }
   // for (const u of users) {
   //   await seedUsers(u);
   // }

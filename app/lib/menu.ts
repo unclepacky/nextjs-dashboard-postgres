@@ -3,7 +3,7 @@ import { CiEdit, CiBoxList } from 'react-icons/ci';
 import { MdOutlineAddHome, MdViewCompact } from 'react-icons/md';
 import { RiGalleryLine } from 'react-icons/ri';
 import { GrVmMaintenance } from 'react-icons/gr';
-import { Contract } from '@prisma/client';
+import { Contract, Transaction } from '@prisma/client';
 
 export interface UnitDropDownTypes {
   label: string;
@@ -31,4 +31,15 @@ export const ContractColumns: { label: string; value: keyof Contract }[] = [
   { label: 'New Monthly', value: 'newMonthlyAmount' },
   { label: 'Type', value: 'type' },
   { label: 'Daily?', value: 'isDaily' },
+];
+export const CustomerStatementColumns: {
+  label: string;
+  value: keyof Transaction | 'unitId';
+}[] = [
+  { label: 'Unit', value: 'unitId' },
+  { label: 'Type', value: 'type' },
+  { label: 'Date', value: 'currentDate' },
+  { label: 'Amount', value: 'amount' },
+  { label: 'Start', value: 'fromDate' },
+  { label: 'End', value: 'toDate' },
 ];

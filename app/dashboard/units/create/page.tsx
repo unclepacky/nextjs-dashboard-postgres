@@ -57,7 +57,7 @@ export default async function UnitsAddPage() {
                 />
               </div>
               <div className="relative">
-                <UnitInput
+                {/* <UnitInput
                   defaultValue=""
                   htmlFor="name"
                   label="name"
@@ -68,7 +68,7 @@ export default async function UnitsAddPage() {
                   type="text"
                   placeholder="Enter first name"
                   icon={<UserCircleIcon />}
-                />
+                /> */}
               </div>
             </div>
           </div>

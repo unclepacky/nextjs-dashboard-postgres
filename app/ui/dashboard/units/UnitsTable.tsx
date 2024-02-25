@@ -6,6 +6,7 @@ import DeleteButton from './delete-button';
 import EditButton from './edit-button';
 import ViewButton from './eye-button';
 import Link from 'next/link';
+import { differenceOfDates } from '@/app/lib/dates';
 
 export default async function UnitsTable({
   currentPage,
@@ -34,9 +35,27 @@ export default async function UnitsTable({
     orderBy: {
       name: 'asc', // Sort by 'name' in ascending order
     },
+    include: {
+      contract: {
+        where: {
+          type: 'ACTIVE',
+        },
+        include: {
+          customer: true,
+          contractExtension: {
+            orderBy: {
+              startDate: 'desc', // Sort by 'name' in ascending order
+            },
+            take: 1,
+          },
+        },
+      },
+    },
     skip: (currentPage - 1) * itemsPerPage,
     take: itemsPerPage,
   });
+
+  // console.log(JSON.stringify(units));
 
   return (
     <div className="mt-6 flow-root">
@@ -58,13 +77,25 @@ export default async function UnitsTable({
                   Status
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
+                  Tenant
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  From &rarr; To
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Amount
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
                   Currency
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Monthly rate
+                  Monthly
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Daily rate
+                  Daily
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Building
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Block
@@ -88,6 +119,29 @@ export default async function UnitsTable({
                   <td className="whitespace-nowrap px-3 py-3">{unit.type}</td>
                   <td className="whitespace-nowrap px-3 py-3">{unit.status}</td>
                   <td className="whitespace-nowrap px-3 py-3">
+                    {unit.status === 'OCCUPIED'
+                      ? unit.contract[0].customer.name
+                      : ''}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {unit.status === 'OCCUPIED' &&
+                    unit.contract[0].type === 'ACTIVE'
+                      ? unit.contract[0].contractExtension[0]?.startDate.toDateString() +
+                        '-->' +
+                        unit.contract[0].contractExtension[0]?.endDate.toDateString()
+                      : ''}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {unit.contract[0]?.contractExtension[0].isDaily
+                      ? differenceOfDates(
+                          unit.contract[0].contractExtension[0]?.startDate,
+                          unit.contract[0].contractExtension[0]?.endDate,
+                        ) * unit.contract[0]?.contractExtension[0].dailyAmount
+                      : unit.contract[0]?.contractExtension[0].monthlyAmount}
+                    {/* {unit.contract[0]?.contractExtension[0].monthlyAmount} */}
+                  </td>
+
+                  <td className="whitespace-nowrap px-3 py-3">
                     {unit.currency}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
@@ -96,7 +150,11 @@ export default async function UnitsTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {unit.dailyRate}
                   </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {unit.building}
+                  </td>
                   <td className="whitespace-nowrap px-3 py-3">{unit.block}</td>
+
                   <td className=" absolute right-0 hidden whitespace-nowrap rounded-2xl bg-white px-3 py-3 shadow-xl group-hover:flex group-hover:bg-slate-200">
                     <div className="flex items-center justify-center gap-2">
                       <DeleteButton id={unit.id} />

@@ -59,3 +59,19 @@ export function FormateDatesToCompare({
 
   return formatedDate;
 }
+
+export function differenceOfDates(fromDate: Date, toDate: Date): number {
+  // Assuming unit.contract[0].contractExtension[0]?.endDate and
+  // unit.contract[0].contractExtension[0]?.startDate are valid date strings.
+
+  const startDate = new Date(fromDate);
+  const endDate = new Date(toDate);
+
+  // Calculate the difference in milliseconds
+  const differenceInMilliseconds = endDate.getTime() - startDate.getTime();
+
+  // Convert the difference from milliseconds to days
+  const differenceInDays = differenceInMilliseconds / (1000 * 3600 * 24);
+
+  return differenceInDays;
+}
